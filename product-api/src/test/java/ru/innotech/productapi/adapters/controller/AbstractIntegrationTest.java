@@ -23,7 +23,7 @@ import ru.innotech.productapi.adapters.repository.ProductRepository;
         port = 0
 )
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {"spring.cloud.openfeign.client.config.discout-api.url=http://localhost:${wiremock.server.port}"})
+        properties = {"spring.cloud.openfeign.client.config.gateway-api.url=http://localhost:${wiremock.server.port}"})
 @ActiveProfiles("test")
 @ContextConfiguration(classes = {ProductApiApplication.class})
 public abstract class AbstractIntegrationTest {

@@ -32,6 +32,28 @@ spring:
                       firstBackoff: 10ms
                       maxBackoff: 50ms
                       factor: 2
+            - id: discount-api
+              uri: http://localhost:8082
+              predicates:
+                - Path=/discount/**
+              metadata:
+                response-timeout: 500
+                connect-timeout: 200
+              filters:
+                - StripPrefix=1
+                - name: CircuitBreaker
+                  args:
+                    name: discountApiCircuitBreaker
+                    fallbackUri: forward:/some-fallback
+                - name: Retry
+                  args:
+                    retries: 3
+                    statuses: BAD_GATEWAY
+                    methods: GET,POST
+                    backoff:
+                      firstBackoff: 10ms
+                      maxBackoff: 50ms
+                      factor: 2
           globalcors:
             cors-configurations:
               '[/**]':
@@ -49,6 +71,13 @@ resilience4j:
   circuitbreaker:
     instances:
       productApiCircuitBreaker:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000ms
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+      discountApiCircuitBreaker:
         registerHealthIndicator: true
         failureRateThreshold: 50
         waitDurationInOpenState: 10000ms

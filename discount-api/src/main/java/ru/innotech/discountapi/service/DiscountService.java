@@ -39,7 +39,7 @@ public class DiscountService {
                 log.warn("Total Number of entities exceeds configured max-fetch-size: {}", maxFetchSize);
             }
             try (var size = MDC.putCloseable("batchSize", String.valueOf(foundDiscounts.getSize()))) {
-                log.info("Get products: returned {}", foundDiscounts.getSize());
+                log.info("Get discounts: returned {}", foundDiscounts.getSize());
             }
 
             return foundDiscounts
